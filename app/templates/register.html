@@ -328,7 +328,7 @@
             <option value="">Select your country</option>
             {% for country in countries %}
               <option value="{{ country.name }}">
-                {{ country.name }}
+                {{ country.flag }} {{ country.name }}
               </option>
             {% endfor %}
           </select>

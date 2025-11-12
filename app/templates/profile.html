@@ -291,7 +291,13 @@
         <div class="profile-info-label">Country</div>
         <div class="profile-info-value">
           {% if current_user.country %}
-            {{ current_user.country }}
+            {% set flag_icon = "" %}
+            {% for country in countries %}
+              {% if country.name == current_user.country %}
+                {% set flag_icon = country.flag %}
+              {% endif %}
+            {% endfor %}
+            {{ flag_icon }} {{ current_user.country }}
           {% else %}
             <span class="empty">Not set</span>
           {% endif %}
@@ -340,7 +346,7 @@
             <option value="">Select your country</option>
             {% for country in countries %}
               <option value="{{ country.name }}" {% if current_user.country == country.name %}selected{% endif %}>
-                {{ country.name }}
+                {{ country.flag }} {{ country.name }}
               </option>
             {% endfor %}
           </select>

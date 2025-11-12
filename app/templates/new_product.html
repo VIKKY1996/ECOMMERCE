@@ -1,10 +1,258 @@
 {% extends "base.html" %}
+{% block title %}Add Product - ShopHub Admin{% endblock %}
 {% block content %}
-<h2>New Product</h2>
-<form method="post">
-  <div class="mb-3"><label>Name</label><input class="form-control" name="name" required></div>
-  <div class="mb-3"><label>Price</label><input class="form-control" name="price" required></div>
-  <div class="mb-3"><label>Description</label><textarea class="form-control" name="description"></textarea></div>
-  <button class="btn btn-success">Create</button>
-</form>
+<style>
+  .admin-container {
+    min-height: calc(100vh - 200px);
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+  }
+
+  .admin-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  .admin-header {
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .admin-header-icon {
+    font-size: 36px;
+    color: #FF9900;
+  }
+
+  .admin-header-content h2 {
+    color: #131921;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+    font-size: 28px;
+  }
+
+  .admin-header-content p {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .form-group {
+    margin-bottom: 25px;
+  }
+
+  .form-group label {
+    display: block;
+    color: #131921;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s;
+    resize: vertical;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #FF9900;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.1);
+  }
+
+  .form-group textarea {
+    min-height: 120px;
+  }
+
+  .form-help-text {
+    font-size: 12px;
+    color: #999;
+    margin-top: 6px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .btn-submit {
+    flex: 1;
+    padding: 14px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 14px;
+    background: white;
+    color: #131921;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-cancel:hover {
+    border-color: #FF9900;
+    background: #fafafa;
+    text-decoration: none;
+  }
+
+  .success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 4px solid #28a745;
+  }
+
+  .pricing-tip {
+    background: #e7f3ff;
+    border-left: 4px solid #2196F3;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 25px;
+    font-size: 13px;
+    color: #1565c0;
+  }
+
+  .pricing-tip strong {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .admin-card {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="admin-container">
+  <div class="admin-card">
+    <div class="admin-header">
+      <i class="fas fa-plus-circle admin-header-icon"></i>
+      <div class="admin-header-content">
+        <h2>Add New Product</h2>
+        <p>Fill in the details to list a new product on ShopHub</p>
+      </div>
+    </div>
+
+    <div class="pricing-tip">
+      <strong>💡 Pricing Tip:</strong>
+      Set competitive prices to attract more customers. Consider your costs and market research.
+    </div>
+
+    <form method="post" novalidate>
+      <div class="form-group">
+        <label for="name">Product Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          placeholder="Enter product name" 
+          required
+          maxlength="200"
+        >
+        <p class="form-help-text">Make it clear and descriptive (max 200 characters)</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price (₹)</label>
+          <input 
+            type="number" 
+            id="price" 
+            name="price" 
+            placeholder="0.00" 
+            step="0.01"
+            min="0"
+            required
+          >
+          <p class="form-help-text">Enter price in Indian Rupees</p>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input 
+            type="text" 
+            id="category" 
+            placeholder="e.g., Electronics" 
+            disabled
+          >
+          <p class="form-help-text">Coming soon: Category selection</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          name="description" 
+          placeholder="Describe your product in detail. Include features, benefits, material, size, color, etc."
+        ></textarea>
+        <p class="form-help-text">Write a detailed description to help customers understand your product</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-upload"></i> Publish Product
+        </button>
+        <a href="{{ url_for('main.index') }}" class="btn-cancel">
+          <i class="fas fa-times"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

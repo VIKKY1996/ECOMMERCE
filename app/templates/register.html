@@ -1,15 +1,293 @@
 {% extends "base.html" %}
+{% block title %}Register - ShopHub{% endblock %}
 {% block content %}
-<h2>Register</h2>
-<form method="post">
-  <div class="mb-3">
-    <label>Email</label>
-    <input class="form-control" name="email" required>
+<style>
+  .auth-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+  }
+
+  .auth-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 30px;
+  }
+
+  .auth-card-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .auth-card-logo {
+    font-size: 36px;
+    font-weight: bold;
+    color: #131921;
+    margin-bottom: 10px;
+  }
+
+  .auth-card-logo span {
+    color: #FF9900;
+  }
+
+  .auth-card-title {
+    color: #131921;
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .auth-card-subtitle {
+    color: #666;
+    font-size: 14px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    color: #131921;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #FF9900;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.1);
+  }
+
+  .form-group input::placeholder {
+    color: #999;
+  }
+
+  .password-requirements {
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .password-requirements li {
+    margin: 4px 0;
+  }
+
+  .password-requirements li.valid {
+    color: #28a745;
+  }
+
+  .password-requirements li.invalid {
+    color: #dc3545;
+  }
+
+  .btn-register {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+  }
+
+  .btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 25px 0;
+    color: #ccc;
+  }
+
+  .auth-divider:before,
+  .auth-divider:after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+  }
+
+  .auth-divider span {
+    padding: 0 15px;
+    color: #999;
+    font-size: 12px;
+  }
+
+  .btn-alternative {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: #131921;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+  }
+
+  .btn-alternative:hover {
+    border-color: #FF9900;
+    background: #fafafa;
+    text-decoration: none;
+  }
+
+  .auth-footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .auth-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 15px 0;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .terms-checkbox input {
+    width: auto;
+    margin-top: 2px;
+  }
+
+  .terms-checkbox a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .terms-checkbox a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <a href="{{ url_for('main.index') }}" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Shopping
+    </a>
+
+    <div class="auth-card-header">
+      <div class="auth-card-logo">
+        Shop<span>Hub</span>
+      </div>
+      <h2 class="auth-card-title">Create Account</h2>
+      <p class="auth-card-subtitle">Join ShopHub today</p>
+    </div>
+
+    <form method="post" novalidate>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="Enter your email" 
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="At least 8 characters" 
+          required
+          autocomplete="new-password"
+          minlength="8"
+        >
+        <div class="password-requirements">
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li>✓ At least 8 characters</li>
+            <li>✓ Contains uppercase and lowercase letters</li>
+            <li>✓ Contains at least one number</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="terms-checkbox">
+        <input type="checkbox" id="terms" required>
+        <label for="terms" style="margin: 0;">
+          I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-register">
+        <i class="fas fa-user-check"></i> Create Account
+      </button>
+    </form>
+
+    <div class="auth-divider">
+      <span>ALREADY A MEMBER?</span>
+    </div>
+
+    <a href="{{ url_for('main.login') }}" class="btn-alternative">
+      <i class="fas fa-sign-in-alt"></i> Sign In to Your Account
+    </a>
+
+    <div class="auth-footer">
+      By creating an account, you agree to our<br>
+      <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+    </div>
   </div>
-  <div class="mb-3">
-    <label>Password</label>
-    <input class="form-control" name="password" type="password" required>
-  </div>
-  <button class="btn btn-primary">Register</button>
-</form>
+</div>
 {% endblock %}

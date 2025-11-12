@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ product.name }}</h2>
+<p>{{ product.description }}</p>
+<p>Price: ₹ {{ "%.2f"|format(product.price) }}</p>
+<a href="{{ url_for('main.add_to_cart', product_id=product.id) }}" class="btn btn-success">Add to cart</a>
+{% endblock %}

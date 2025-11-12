@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>New Product</h2>
+<form method="post">
+  <div class="mb-3"><label>Name</label><input class="form-control" name="name" required></div>
+  <div class="mb-3"><label>Price</label><input class="form-control" name="price" required></div>
+  <div class="mb-3"><label>Description</label><textarea class="form-control" name="description"></textarea></div>
+  <button class="btn btn-success">Create</button>
+</form>
+{% endblock %}

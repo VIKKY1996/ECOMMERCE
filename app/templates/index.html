@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Home - My Shop{% endblock %}
+{% block content %}
+<h1>Products</h1>
+<div class="row">
+  {% for p in products %}
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ p.name }}</h5>
+        <p class="card-text">{{ p.description or "" }}</p>
+        <p class="card-text">₹ {{ "%.2f"|format(p.price) }}</p>
+        <a href="{{ url_for('main.product_detail', product_id=p.id) }}" class="btn btn-primary">View</a>
+        <a href="{{ url_for('main.add_to_cart', product_id=p.id) }}" class="btn btn-success">Add to cart</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<a href="{{ url_for('main.new_product') }}" class="btn btn-secondary">Add new product (admin)</a>
+{% endblock %}

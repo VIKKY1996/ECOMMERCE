@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your Cart</h2>
+<table class="table">
+  <thead><tr><th>Product</th><th>Qty</th><th>Subtotal</th></tr></thead>
+  <tbody>
+    {% for i in items %}
+    <tr>
+      <td>{{ i.product.name }}</td>
+      <td>{{ i.qty }}</td>
+      <td>₹ {{ "%.2f"|format(i.subtotal) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p>Total: ₹ {{ "%.2f"|format(total) }}</p>
+{% endblock %}

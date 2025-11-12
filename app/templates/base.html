@@ -131,6 +131,46 @@
       font-weight: bold;
     }
 
+    /* Country Selector */
+    .country-selector {
+      color: white;
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+      align-items: center;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .country-selector select {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 120px;
+    }
+
+    .country-selector select:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: var(--amazon-orange);
+    }
+
+    .country-selector select:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: var(--amazon-orange);
+    }
+
+    .country-selector select option {
+      background: var(--amazon-blue);
+      color: white;
+      padding: 8px;
+    }
+
     /* Flash Messages */
     .alert-container {
       position: fixed;
@@ -225,9 +265,29 @@
       </div>
     </div>
 
+    <!-- Country Selector -->
+    <div class="country-selector">
+      <i class="fas fa-globe"></i>
+      <select id="countrySelect" onchange="selectCountry(this.value)">
+        <option value="">Select Country</option>
+        <option value="India">🇮🇳 India</option>
+        <option value="United States">🇺🇸 United States</option>
+        <option value="United Kingdom">🇬🇧 United Kingdom</option>
+        <option value="Canada">🇨🇦 Canada</option>
+        <option value="Australia">🇦🇺 Australia</option>
+        <option value="Germany">🇩🇪 Germany</option>
+        <option value="France">🇫🇷 France</option>
+        <option value="Japan">🇯🇵 Japan</option>
+        <option value="Singapore">🇸🇬 Singapore</option>
+        <option value="United Arab Emirates">🇦🇪 UAE</option>
+        <option value="Brazil">🇧🇷 Brazil</option>
+        <option value="Mexico">🇲🇽 Mexico</option>
+      </select>
+    </div>
+
     <div class="navbar-account">
       {% if current_user.is_authenticated %}
-        <a href="{{ url_for('main.index') }}" class="account-item">
+        <a href="{{ url_for('main.profile') }}" class="account-item">
           <i class="fas fa-user"></i>
           <span>{{ current_user.email.split('@')[0] }}</span>
         </a>
@@ -253,6 +313,25 @@
     </div>
   </div>
 </nav>
+
+<script>
+  function selectCountry(country) {
+    if (country) {
+      // Store selected country in localStorage
+      localStorage.setItem('selectedCountry', country);
+      console.log('Selected country: ' + country);
+      // You can add more functionality here like filtering products by country
+    }
+  }
+
+  // Load previously selected country
+  window.addEventListener('load', function() {
+    const savedCountry = localStorage.getItem('selectedCountry');
+    if (savedCountry) {
+      document.getElementById('countrySelect').value = savedCountry;
+    }
+  });
+</script>
 
 <!-- Flash Messages -->
 <div class="alert-container">

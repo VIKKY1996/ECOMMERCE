@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from . import db, login_manager
 from .models import Product, User
+from .countries import get_countries_list
 from flask_login import login_user, logout_user, login_required, current_user
 
 main_bp = Blueprint("main", __name__)
@@ -18,19 +19,25 @@ def product_detail(product_id):
 # Simple register/login (very minimal)
 @main_bp.route("/register", methods=["GET", "POST"])
 def register():
+    countries = get_countries_list()
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
+        country = request.form.get("country", "India")
+        phone = request.form.get("phone", "")
+        address = request.form.get("address", "")
+        
         if User.query.filter_by(email=email).first():
-            flash("Email already exists")
+            flash("Email already exists", "error")
             return redirect(url_for("main.register"))
-        u = User(email=email)
+        
+        u = User(email=email, country=country, phone=phone, address=address)
         u.set_password(password)
         db.session.add(u)
         db.session.commit()
-        flash("Account created. Please login.")
+        flash("Account created. Please login.", "success")
         return redirect(url_for("main.login"))
-    return render_template("register.html")
+    return render_template("register.html", countries=countries)
 
 @main_bp.route("/login", methods=["GET", "POST"])
 def login():
@@ -81,9 +88,27 @@ def new_product():
         p = Product(name=name, price=price, description=desc)
         db.session.add(p)
         db.session.commit()
-        flash("Product added")
+        flash("Product added", "success")
         return redirect(url_for("main.index"))
     return render_template("new_product.html")
+
+# User Profile
+@main_bp.route("/profile", methods=["GET"])
+@login_required
+def profile():
+    countries = get_countries_list()
+    return render_template("profile.html", countries=countries)
+
+@main_bp.route("/profile/update", methods=["POST"])
+@login_required
+def update_profile():
+    current_user.country = request.form.get("country", current_user.country)
+    current_user.phone = request.form.get("phone", current_user.phone)
+    current_user.address = request.form.get("address", current_user.address)
+    db.session.commit()
+    flash("Profile updated successfully!", "success")
+    return redirect(url_for("main.profile"))
+
 from .models import User
 @login_manager.user_loader
 def load_user(user_id):

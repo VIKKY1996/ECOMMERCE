@@ -16,8 +16,10 @@
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     padding: 40px 30px;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .auth-card-header {
@@ -48,8 +50,28 @@
     font-size: 14px;
   }
 
+  .form-section {
+    margin-bottom: 25px;
+  }
+
+  .form-section-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #FF9900;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f5f5f5;
+  }
+
   .form-group {
     margin-bottom: 18px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
   }
 
   .form-group label {
@@ -60,23 +82,34 @@
     margin-bottom: 6px;
   }
 
-  .form-group input {
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
     transition: border-color 0.3s;
+    font-family: inherit;
   }
 
-  .form-group input:focus {
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
     outline: none;
     border-color: #FF9900;
     box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.1);
   }
 
-  .form-group input::placeholder {
+  .form-group input::placeholder,
+  .form-group select::placeholder {
     color: #999;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
   }
 
   .password-requirements {
@@ -169,7 +202,7 @@
     padding-top: 20px;
     border-top: 1px solid #e0e0e0;
     color: #666;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .auth-footer a {
@@ -205,6 +238,7 @@
   .terms-checkbox input {
     width: auto;
     margin-top: 2px;
+    padding: 0;
   }
 
   .terms-checkbox a {
@@ -214,6 +248,21 @@
 
   .terms-checkbox a:hover {
     text-decoration: underline;
+  }
+
+  .required {
+    color: #dc3545;
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .auth-card {
+      padding: 20px;
+      max-width: 100%;
+    }
   }
 </style>
 
@@ -228,42 +277,97 @@
         Shop<span>Hub</span>
       </div>
       <h2 class="auth-card-title">Create Account</h2>
-      <p class="auth-card-subtitle">Join ShopHub today</p>
+      <p class="auth-card-subtitle">Join ShopHub today and start shopping</p>
     </div>
 
     <form method="post" novalidate>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          placeholder="Enter your email" 
-          required
-          autocomplete="email"
-        >
-      </div>
+      <!-- Account Information Section -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="fas fa-user"></i> Account Information</div>
+        
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Enter your email" 
+            required
+            autocomplete="email"
+          >
+        </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input 
-          type="password" 
-          id="password" 
-          name="password" 
-          placeholder="At least 8 characters" 
-          required
-          autocomplete="new-password"
-          minlength="8"
-        >
-        <div class="password-requirements">
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>✓ At least 8 characters</li>
-            <li>✓ Contains uppercase and lowercase letters</li>
-            <li>✓ Contains at least one number</li>
-          </ul>
+        <div class="form-group">
+          <label for="password">Password <span class="required">*</span></label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="At least 8 characters" 
+            required
+            autocomplete="new-password"
+            minlength="8"
+          >
+          <div class="password-requirements">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li>✓ At least 8 characters</li>
+              <li>✓ Mix of uppercase and lowercase letters</li>
+              <li>✓ Include at least one number</li>
+            </ul>
+          </div>
         </div>
       </div>
 
+      <!-- Delivery Address Section -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="fas fa-map-marker-alt"></i> Delivery Address</div>
+        
+        <div class="form-group">
+          <label for="country">Country <span class="required">*</span></label>
+          <select id="country" name="country" required>
+            <option value="">Select your country</option>
+            {% for country in countries %}
+              <option value="{{ country.name }}">
+                {{ country.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input 
+              type="tel" 
+              id="phone" 
+              name="phone" 
+              placeholder="10-digit phone number"
+              pattern="[0-9]{10}"
+              autocomplete="tel"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="state">State/Province</label>
+            <input 
+              type="text" 
+              id="state" 
+              placeholder="Enter your state/province"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Street Address</label>
+          <textarea 
+            id="address" 
+            name="address" 
+            placeholder="Enter your complete address (e.g., House No., Street, Area, City)"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Terms & Conditions -->
       <div class="terms-checkbox">
         <input type="checkbox" id="terms" required>
         <label for="terms" style="margin: 0;">
